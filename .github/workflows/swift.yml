@@ -22,12 +22,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Run Swift Tests
+      - name: Setup Swift
         uses: vapor/swiftly-action@v0.1
         with:
-          swift-version: ${{ matrix.swift }}
-          working-directory: .
-          run: |
-            swift --version
-            swift build
-            swift test
+          toolchain: ${{ matrix.swift }}
+      
+      - name: Show Swift version
+        run: swift --version
+      
+      - name: Build
+        run: swift build -v
+      
+      - name: Run tests
+        run: swift test -v

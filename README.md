@@ -71,7 +71,6 @@ do {
 }
 ```
 
-
 ## Error Handling
 
 The library provides comprehensive error handling for various edge cases:
@@ -110,16 +109,6 @@ import Foundation
 ```
 
 This ensures the best performance across different platforms.
-
-## Continuous Integration
-
-This project uses GitHub Actions with the [vapor/swiftly-action](https://github.com/vapor/swiftly-action) to run tests on both macOS and Linux platforms, ensuring cross-platform compatibility.
-
-## Requirements
-
-- Swift 6.0 or higher
-- macOS 13.0+, iOS 16.0+, tvOS 16.0+, watchOS 9.0+, visionOS 1.0+
-- Linux with Swift 6.0 toolchain
 
 ## Algorithm Details
 
@@ -216,9 +205,15 @@ static func voronoiDiagram(from triangles: [Triangle]) -> [Edge]
 
 In the worst case (when most points fall in the circumcircle of most triangles), the time complexity can degrade to O(n²).
 
-## License
+## Continuous Integration
 
-This library is released under the MIT license.
+This project uses GitHub Actions with the [vapor/swiftly-action](https://github.com/vapor/swiftly-action) to run tests on both macOS and Linux platforms, ensuring cross-platform compatibility.
+
+## Requirements
+
+- Swift 6.0 or higher
+- macOS 13.0+, iOS 16.0+, tvOS 16.0+, watchOS 9.0+, visionOS 1.0+
+- Linux with Swift 6.0 toolchain
 
 ## References
 
@@ -226,3 +221,7 @@ This library is released under the MIT license.
 2. Watson, D. F. (1981). "Computing the n-dimensional Delaunay tessellation with application to Voronoi polytopes". The Computer Journal. 24 (2): 167–172.
 3. de Berg, M., Cheong, O., van Kreveld, M., & Overmars, M. (2008). "Computational Geometry: Algorithms and Applications" (3rd ed.). Springer-Verlag.
 4. O'Rourke, J. (1998). "Computational Geometry in C" (2nd ed.). Cambridge University Press.
+
+## License
+
+This library is released under the MIT license.
