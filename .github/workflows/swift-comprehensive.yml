@@ -1,0 +1,91 @@
+name: Swift Comprehensive CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  macos-tests:
+    name: macOS Swift ${{ matrix.swift }} Tests
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        swift: ["6.0"]
+        
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run Tests on macOS
+        uses: vapor/swiftly-action@v1.0.0
+        with:
+          swift-version: ${{ matrix.swift }}
+          working-directory: .
+          run: |
+            swift --version
+            swift build
+            swift test
+            
+  linux-tests:
+    name: Linux Swift ${{ matrix.swift }} Tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        swift: ["6.0"]
+        
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run Tests on Linux
+        uses: vapor/swiftly-action@v1.0.0
+        with:
+          swift-version: ${{ matrix.swift }}
+          working-directory: .
+          run: |
+            swift --version
+            swift build
+            swift test
+            
+  validation:
+    name: Swift Format and Lint
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Format Validation
+        uses: vapor/swiftly-action@v1.0.0
+        with:
+          swift-version: "6.0"
+          working-directory: .
+          run: |
+            # Install swift-format
+            git clone https://github.com/apple/swift-format.git
+            cd swift-format
+            swift build -c release
+            cd ..
+            echo "Checking Swift formatting..."
+            swift-format/build/release/swift-format lint --recursive Sources Tests
+            
+  documentation:
+    name: Documentation Generation
+    runs-on: macos-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Generate Documentation
+        uses: vapor/swiftly-action@v1.0.0
+        with:
+          swift-version: "6.0"
+          working-directory: .
+          run: |
+            # Install swift-doc
+            brew install swiftdocorg/formulae/swift-doc
+            mkdir -p Documentation
+            swift-doc generate Sources --module-name DelaunayTriangulation --format html --output Documentation
+            # Docs could be published to GitHub Pages or other hosting

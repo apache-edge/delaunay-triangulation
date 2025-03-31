@@ -1,0 +1,79 @@
+name: Swift Release
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+
+jobs:
+  build-macos:
+    name: Build macOS Release
+    runs-on: macos-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Build CLI Release
+        uses: vapor/swiftly-action@v1.0.0
+        with:
+          swift-version: "6.0"
+          working-directory: .
+          run: |
+            swift --version
+            swift build -c release
+            cp .build/release/DelaunayTriangulationCLI ./DelaunayTriangulationCLI-macos
+      
+      - name: Upload macOS Binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: DelaunayTriangulationCLI-macos
+          path: DelaunayTriangulationCLI-macos
+          
+  build-linux:
+    name: Build Linux Release
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Build CLI Release
+        uses: vapor/swiftly-action@v1.0.0
+        with:
+          swift-version: "6.0"
+          working-directory: .
+          run: |
+            swift --version
+            swift build -c release
+            cp .build/release/DelaunayTriangulationCLI ./DelaunayTriangulationCLI-linux
+      
+      - name: Upload Linux Binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: DelaunayTriangulationCLI-linux
+          path: DelaunayTriangulationCLI-linux
+  
+  create-release-assets:
+    name: Publish Release Assets
+    needs: [build-macos, build-linux]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    
+    steps:
+      - name: Download macOS Binary
+        uses: actions/download-artifact@v3
+        with:
+          name: DelaunayTriangulationCLI-macos
+          
+      - name: Download Linux Binary
+        uses: actions/download-artifact@v3
+        with:
+          name: DelaunayTriangulationCLI-linux
+      
+      - name: Upload Release Assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            DelaunayTriangulationCLI-macos
+            DelaunayTriangulationCLI-linux
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

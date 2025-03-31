@@ -1,0 +1,33 @@
+name: Swift CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            swift: "6.0"
+          - os: ubuntu-latest
+            swift: "6.0"
+    
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run Swift Tests
+        uses: vapor/swiftly-action@v1.0.0
+        with:
+          swift-version: ${{ matrix.swift }}
+          working-directory: .
+          run: |
+            swift --version
+            swift build
+            swift test
