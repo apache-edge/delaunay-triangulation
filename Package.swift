@@ -13,19 +13,13 @@ let package = Package(
     products: [
         .library(
             name: "DelaunayTriangulation",
-            targets: ["DelaunayTriangulation"]),
-        .executable(
-            name: "DelaunayTriangulationCLI",
-            targets: ["DelaunayTriangulationCLI"])
+            targets: ["DelaunayTriangulation"])
     ],
     dependencies: [],
     targets: [
         .target(
             name: "DelaunayTriangulation",
             dependencies: []),
-        .executableTarget(
-            name: "DelaunayTriangulationCLI",
-            dependencies: ["DelaunayTriangulation"]),
         .testTarget(
             name: "DelaunayTriangulationTests",
             dependencies: ["DelaunayTriangulation"]),

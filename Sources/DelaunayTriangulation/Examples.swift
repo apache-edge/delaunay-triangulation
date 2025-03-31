@@ -16,7 +16,18 @@ public enum Examples {
             Point(x: 5, y: 5)
         ]
         
-        return DelaunayTriangulator.triangulate(points: points)
+        do {
+            return try DelaunayTriangulator.triangulate(points: points)
+        } catch DelaunayTriangulationError.duplicatePoints {
+            print("Error: Duplicate points found in input")
+            return []
+        } catch DelaunayTriangulationError.collinearPoints {
+            print("Error: All input points are collinear")
+            return []
+        } catch {
+            print("Error: \(error.localizedDescription)")
+            return []
+        }
     }
     
     /// Generate a Voronoi diagram from a set of random points
@@ -33,10 +44,14 @@ public enum Examples {
         }
         
         // Triangulate
-        let triangles = DelaunayTriangulator.triangulate(points: points)
-        
-        // Generate Voronoi diagram
-        return DelaunayTriangulator.voronoiDiagram(from: triangles)
+        do {
+            let triangles = try DelaunayTriangulator.triangulate(points: points)
+            // Generate Voronoi diagram
+            return DelaunayTriangulator.voronoiDiagram(from: triangles)
+        } catch {
+            print("Error: \(error.localizedDescription)")
+            return []
+        }
     }
     
     /// Triangulate a circle of points
@@ -54,7 +69,68 @@ public enum Examples {
             points.append(Point(x: x, y: y))
         }
         
-        return DelaunayTriangulator.triangulate(points: points)
+        do {
+            return try DelaunayTriangulator.triangulate(points: points)
+        } catch {
+            print("Error: \(error.localizedDescription)")
+            return []
+        }
+    }
+    
+    /// Example with collinear points to demonstrate error handling
+    public static func triangulateCollinearPoints() -> Result<[Triangle], DelaunayTriangulationError> {
+        let points = [
+            Point(x: 0, y: 0),
+            Point(x: 1, y: 1),
+            Point(x: 2, y: 2),
+            Point(x: 3, y: 3)
+        ]
+        
+        do {
+            let triangles = try DelaunayTriangulator.triangulate(points: points)
+            return .success(triangles)
+        } catch let error as DelaunayTriangulationError {
+            return .failure(error)
+        } catch {
+            return .failure(.general("Unexpected error: \(error.localizedDescription)"))
+        }
+    }
+    
+    /// Example with duplicate points to demonstrate error handling
+    public static func triangulateDuplicatePoints() -> Result<[Triangle], DelaunayTriangulationError> {
+        let points = [
+            Point(x: 0, y: 0),
+            Point(x: 1, y: 1),
+            Point(x: 0, y: 0), // Duplicate point
+            Point(x: 3, y: 3)
+        ]
+        
+        do {
+            let triangles = try DelaunayTriangulator.triangulate(points: points)
+            return .success(triangles)
+        } catch let error as DelaunayTriangulationError {
+            return .failure(error)
+        } catch {
+            return .failure(.general("Unexpected error: \(error.localizedDescription)"))
+        }
+    }
+    
+    /// Example with edge case: nearly collinear points
+    public static func triangulateNearlyCollinearPoints() -> [Triangle] {
+        // Points that are clearly not collinear
+        let points = [
+            Point(x: 0, y: 0),
+            Point(x: 1, y: 0),
+            Point(x: 0.5, y: 0.5),  // Clearly not collinear with the other points
+            Point(x: 2, y: 0.2)
+        ]
+        
+        do {
+            return try DelaunayTriangulator.triangulate(points: points)
+        } catch {
+            print("Error: \(error.localizedDescription)")
+            return []
+        }
     }
     
     /// Print the triangles in a readable format

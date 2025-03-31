@@ -7,18 +7,18 @@ import Foundation
 @testable import DelaunayTriangulation
 
 struct DelaunayTriangulationTests {
-    @Test func emptyTriangulation() {
-        let triangles = DelaunayTriangulator.triangulate(points: [])
+    @Test func emptyTriangulation() throws {
+        let triangles = try DelaunayTriangulator.triangulate(points: [])
         #expect(triangles.isEmpty)
         
-        let onePoint = DelaunayTriangulator.triangulate(points: [Point(x: 1, y: 1)])
+        let onePoint = try DelaunayTriangulator.triangulate(points: [Point(x: 1, y: 1)])
         #expect(onePoint.isEmpty)
         
-        let twoPoints = DelaunayTriangulator.triangulate(points: [Point(x: 1, y: 1), Point(x: 2, y: 2)])
+        let twoPoints = try DelaunayTriangulator.triangulate(points: [Point(x: 1, y: 1), Point(x: 2, y: 2)])
         #expect(twoPoints.isEmpty)
     }
     
-    @Test func simpleTriangulation() {
+    @Test func simpleTriangulation() throws {
         // Three points should form exactly one triangle
         let points = [
             Point(x: 0, y: 0),
@@ -26,7 +26,7 @@ struct DelaunayTriangulationTests {
             Point(x: 0, y: 1)
         ]
         
-        let triangles = DelaunayTriangulator.triangulate(points: points)
+        let triangles = try DelaunayTriangulator.triangulate(points: points)
         #expect(triangles.count == 1)
         
         let triangle = triangles[0]
@@ -39,7 +39,7 @@ struct DelaunayTriangulationTests {
         #expect(vertices.contains(points[2]))
     }
     
-    @Test func squareTriangulation() {
+    @Test func squareTriangulation() throws {
         // Four points in a square should form two triangles
         let points = [
             Point(x: 0, y: 0),
@@ -48,7 +48,7 @@ struct DelaunayTriangulationTests {
             Point(x: 0, y: 1)
         ]
         
-        let triangles = DelaunayTriangulator.triangulate(points: points)
+        let triangles = try DelaunayTriangulator.triangulate(points: points)
         #expect(triangles.count == 2)
         
         // Collect all edges from the triangulation
@@ -69,7 +69,7 @@ struct DelaunayTriangulationTests {
         #expect(edges.contains(Edge(p1: points[3], p2: points[0])))
     }
     
-    @Test func delaunayProperty() {
+    @Test func delaunayProperty() throws {
         // Create a test case where the delaunay property is important
         let points = [
             Point(x: 0, y: 0),
@@ -78,7 +78,7 @@ struct DelaunayTriangulationTests {
             Point(x: 0.5, y: 0.1)   // Point inside the triangle, close to bottom edge
         ]
         
-        let triangles = DelaunayTriangulator.triangulate(points: points)
+        let triangles = try DelaunayTriangulator.triangulate(points: points)
         
         // The Delaunay triangulation should not have an edge from (0,0) to (1,0)
         // because the point (0.5, 0.1) is inside the circumcircle of that triangle
@@ -105,7 +105,7 @@ struct DelaunayTriangulationTests {
         }
     }
     
-    @Test func voronoiDiagram() {
+    @Test func voronoiDiagram() throws {
         // Test with a simple square
         let points = [
             Point(x: 0, y: 0),
@@ -114,16 +114,16 @@ struct DelaunayTriangulationTests {
             Point(x: 0, y: 1)
         ]
         
-        let triangles = DelaunayTriangulator.triangulate(points: points)
+        let triangles = try DelaunayTriangulator.triangulate(points: points)
         let voronoi = DelaunayTriangulator.voronoiDiagram(from: triangles)
         
         // For a square with 2 triangles, there should be 1 Voronoi edge
         #expect(voronoi.count == 1)
     }
     
-    @Test func helperTriangulateFunction() {
+    @Test func helperTriangulateFunction() throws {
         let pointTuples = [(0.0, 0.0), (1.0, 0.0), (0.0, 1.0)]
-        let result = triangulate(points: pointTuples)
+        let result = try triangulate(points: pointTuples)
         
         #expect(result.count == 1)
         #expect(result[0].count == 3)
