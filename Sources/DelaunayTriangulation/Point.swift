@@ -4,9 +4,7 @@ import FoundationEssentials
 import Foundation
 #endif
 
-#if canImport(Darwin)
-import Darwin
-#elseif canImport(Glibc)
+#if canImport(Glibc)
 import Glibc
 #elseif os(Windows)
 import ucrt

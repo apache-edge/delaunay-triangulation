@@ -1,9 +1,13 @@
 import Testing
 @testable import DelaunayTriangulation
 
-#if canImport(Darwin)
-import Darwin
-#elseif canImport(Glibc)
+#if canImport(FoundationEssentials)
+import FoundationEssentials
+#else
+import Foundation
+#endif
+
+#if canImport(Glibc)
 import Glibc
 #elseif os(Windows)
 import ucrt
