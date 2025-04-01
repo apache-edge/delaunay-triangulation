@@ -4,6 +4,14 @@ import FoundationEssentials
 import Foundation
 #endif
 
+#if canImport(Darwin)
+import Darwin
+#elseif canImport(Glibc)
+import Glibc
+#elseif os(Windows)
+import ucrt
+#endif
+
 /// Represents a 2D point in the Delaunay triangulation
 public struct Point: Hashable, Equatable {
     public let x: Double

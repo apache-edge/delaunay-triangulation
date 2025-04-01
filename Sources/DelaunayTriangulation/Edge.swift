@@ -4,6 +4,14 @@ import FoundationEssentials
 import Foundation
 #endif
 
+#if canImport(Darwin)
+import Darwin
+#elseif canImport(Glibc)
+import Glibc
+#elseif os(Windows)
+import ucrt
+#endif
+
 /// Represents an edge in the Delaunay triangulation
 public struct Edge: Hashable, Equatable {
     public let p1: Point

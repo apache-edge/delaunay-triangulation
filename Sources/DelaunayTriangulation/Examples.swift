@@ -4,6 +4,14 @@ import FoundationEssentials
 import Foundation
 #endif
 
+#if canImport(Darwin)
+import Darwin
+#elseif canImport(Glibc)
+import Glibc
+#elseif os(Windows)
+import ucrt
+#endif
+
 /// Examples demonstrating how to use the Delaunay triangulation library
 public enum Examples {
     /// Example of triangulating a simple square with a point in the middle
@@ -25,7 +33,7 @@ public enum Examples {
             print("Error: All input points are collinear")
             return []
         } catch {
-            print("Error: \(error.localizedDescription)")
+            print("Error: \(error)")
             return []
         }
     }
@@ -49,7 +57,7 @@ public enum Examples {
             // Generate Voronoi diagram
             return DelaunayTriangulator.voronoiDiagram(from: triangles)
         } catch {
-            print("Error: \(error.localizedDescription)")
+            print("Error: \(error)")
             return []
         }
     }
@@ -72,7 +80,7 @@ public enum Examples {
         do {
             return try DelaunayTriangulator.triangulate(points: points)
         } catch {
-            print("Error: \(error.localizedDescription)")
+            print("Error: \(error)")
             return []
         }
     }
@@ -92,7 +100,7 @@ public enum Examples {
         } catch let error as DelaunayTriangulationError {
             return .failure(error)
         } catch {
-            return .failure(.general("Unexpected error: \(error.localizedDescription)"))
+            return .failure(.general("Unexpected error: \(error)"))
         }
     }
     
@@ -111,7 +119,7 @@ public enum Examples {
         } catch let error as DelaunayTriangulationError {
             return .failure(error)
         } catch {
-            return .failure(.general("Unexpected error: \(error.localizedDescription)"))
+            return .failure(.general("Unexpected error: \(error)"))
         }
     }
     
@@ -128,7 +136,7 @@ public enum Examples {
         do {
             return try DelaunayTriangulator.triangulate(points: points)
         } catch {
-            print("Error: \(error.localizedDescription)")
+            print("Error: \(error)")
             return []
         }
     }

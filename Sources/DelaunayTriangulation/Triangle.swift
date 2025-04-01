@@ -180,7 +180,7 @@ public struct Triangle: Hashable, Equatable {
         // Handle nearly horizontal lines
         if abs(dy1) < epsilon {
             // AB is nearly horizontal
-            let abPerpSlope = Double.infinity
+            let _ = Double.infinity
             
             if abs(dy2) < epsilon {
                 // Both lines are nearly horizontal
@@ -201,7 +201,7 @@ public struct Triangle: Hashable, Equatable {
             }
         } else if abs(dy2) < epsilon {
             // BC is nearly horizontal
-            let bcPerpSlope = Double.infinity
+            let _ = Double.infinity
             
             // Calculate perpendicular slope for AB
             let abPerpSlope = abs(dx1) < epsilon ? 0 : -dx1 / dy1
