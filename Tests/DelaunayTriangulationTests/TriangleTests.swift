@@ -1,10 +1,13 @@
 import Testing
-#if canImport(FoundationEssentials)
-import FoundationEssentials
-#else
-import Foundation
-#endif
 @testable import DelaunayTriangulation
+
+#if canImport(Darwin)
+import Darwin
+#elseif canImport(Glibc)
+import Glibc
+#elseif os(Windows)
+import ucrt
+#endif
 
 struct TriangleTests {
     @Test func triangleProperties() throws {

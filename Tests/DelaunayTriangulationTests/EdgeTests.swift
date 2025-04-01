@@ -1,10 +1,19 @@
 import Testing
+@testable import DelaunayTriangulation
+
+#if canImport(Darwin)
+import Darwin
+#elseif canImport(Glibc)
+import Glibc
+#elseif os(Windows)
+import ucrt
+#endif
+
 #if canImport(FoundationEssentials)
 import FoundationEssentials
 #else
 import Foundation
 #endif
-@testable import DelaunayTriangulation
 
 struct EdgeTests {
     @Test func edgeProperties() {

@@ -1,10 +1,14 @@
 import Testing
-#if canImport(FoundationEssentials)
-import FoundationEssentials
-#else
-import Foundation
-#endif
 @testable import DelaunayTriangulation
+import Foundation
+
+#if canImport(Darwin)
+import Darwin
+#elseif canImport(Glibc)
+import Glibc
+#elseif os(Windows)
+import ucrt
+#endif
 
 struct RobustnessTests {
     // Helper function to generate random points
