@@ -1,35 +1,47 @@
-name: Swift Release
+name: swift
 
 on:
-  release:
-    types: [created]
-  workflow_dispatch:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
 
 jobs:
-  validate-release:
-    name: Validate Release
-    runs-on: macos-latest
-    
+  # Build and test on multiple platforms
+  build-and-test:
+    name: Swift ${{ matrix.swift }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        swift: ["6.0.0"]
     steps:
-      - uses: actions/checkout@v4
-      
-      - name: Build & Test
-        uses: vapor/swiftly-action@v0.1
-        with:
-          swift-version: "6.0"
-          working-directory: .
-          run: |
-            swift --version
-            swift build -c release
-            swift test
-      
-      - name: Generate Documentation
-        uses: vapor/swiftly-action@v0.1
-        with:
-          swift-version: "6.0"
-          working-directory: .
-          run: |
-            # Install swift-doc
-            brew install swiftdocorg/formulae/swift-doc || true
-            mkdir -p Documentation
-            swift-doc generate Sources --module-name DelaunayTriangulation --format html --output Documentation
+    - uses: actions/checkout@v4
+    - name: Setup Swift
+      uses: SwiftyLab/setup-swift@v1
+      with:
+        swift-version: ${{ matrix.swift }}
+    - name: Build
+      run: swift build -c release
+    - name: Run tests with Swift Testing
+      run: swift test
+
+  generate-documentation:
+    name: Generate Documentation
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup Swift
+      uses: SwiftyLab/setup-swift@v1
+      with:
+        swift-version: "6.0.0"
+    - name: Install swift-doc
+      run: brew install swiftdocorg/formulae/swift-doc || true
+    - name: Generate Documentation
+      run: swift-doc generate Sources --module-name DelaunayTriangulation --format html --output docs
+    - name: Upload Documentation
+      uses: actions/upload-artifact@v4
+      with:
+        name: documentation
+        path: docs
