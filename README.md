@@ -48,7 +48,7 @@ Add the dependency to your `Package.swift` file:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/apache-edge/delaunay-triangulation.git", from: "1.0.0")
+    .package(url: "https://github.com/apache-edge/delaunay-triangulation.git", from: "0.0.1")
 ]
 ```
 
